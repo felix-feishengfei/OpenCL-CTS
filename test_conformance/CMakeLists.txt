@@ -87,3 +87,9 @@ endforeach()
 foreach(FILE test_conformance/${PY_FILES})
 
 endforeach()
+
+# Copy spirv_bin
+set(SPIRV_BIN "spirv_bin")
+file(COPY spirv_new/${SPIRV_BIN} DESTINATION ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
+file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${SPIRV_BIN}
+    DESTINATION ${CMAKE_BINARY_DIR}/test_conformance)

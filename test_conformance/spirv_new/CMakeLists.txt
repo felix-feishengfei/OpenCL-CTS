@@ -23,3 +23,14 @@ set(TEST_HARNESS_SOURCES
 set(${MODULE_NAME}_SOURCES ${SPIRV_NEW_SOURCES} ${TEST_HARNESS_SOURCES})
 
 include(../CMakeCommon.txt)
+execute_process(
+    COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/assemble_spirv.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RESULT_VARIABLE PYTHON_RESULT
+)
+
+if(PYTHON_RESULT EQUAL 0)
+    message(STATUS "assemble_spirv.py executed successfully.")
+else()
+    message(FATAL_ERROR "assemble_spirv.py executed failure.")
+endif()
