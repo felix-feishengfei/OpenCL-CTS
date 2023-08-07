@@ -93,3 +93,24 @@ set(SPIRV_BIN "spirv_bin")
 file(COPY spirv_new/${SPIRV_BIN} DESTINATION ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY})
 file(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/${SPIRV_BIN}
     DESTINATION ${CMAKE_BINARY_DIR}/test_conformance)
+
+
+# declare a directory for release distribution
+set(DIST_OUTPUT_DIRECTORY_CL ${CMAKE_BINARY_DIR}/debian_data_clcts)
+set(DIST_OUTPUT_TARBALL_CL ${CMAKE_BINARY_DIR}/data_clcts.tar.gz)
+
+# add target dist_clcts as ALL so that this target will always be triggered.
+add_custom_target(dist_clcts ALL
+    COMMAND echo "packaging ${DIST_OUTPUT_TARBALL_CL}..."
+)
+
+# command list to pack output into tarball
+add_custom_command(
+    TARGET dist_clcts POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${DIST_OUTPUT_DIRECTORY_CL}
+    COMMAND ${CMAKE_COMMAND} -E remove ${DIST_OUTPUT_TARBALL_CL}
+    COMMAND ${CMAKE_COMMAND} -E env CMAKE_CURRENT_BINARY_DIR=${CMAKE_CURRENT_BINARY_DIR} DIST_OUTPUT_DIRECTORY=${DIST_OUTPUT_DIRECTORY_CL} bash ${CMAKE_SOURCE_DIR}/debian_release/copy_and_filter.sh
+    COMMAND tar -zcf ${DIST_OUTPUT_TARBALL_CL} -C ${DIST_OUTPUT_DIRECTORY_CL} .
+)
+
+install(FILES ${DIST_OUTPUT_TARBALL_CL} DESTINATION /opt/opencl-cts/)

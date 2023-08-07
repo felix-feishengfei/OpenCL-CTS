@@ -3,3 +3,4 @@
 .*.swo
 tags
 /build
+spirv_bin/
